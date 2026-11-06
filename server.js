@@ -11,6 +11,15 @@ process.env.BOT_TOKEN;
 const CHAT_ID =
 process.env.CHAT_ID;
 
+function formatNomor(nomor) {
+    const angka = String(nomor).replace(/\D/g, "");
+
+    return angka.replace(
+        /^(\d{3})(\d{4})(\d{4})$/,
+        "$1-$2-$3"
+    );
+}
+
 app.use(express.json());
 app.use(
     express.urlencoded({
