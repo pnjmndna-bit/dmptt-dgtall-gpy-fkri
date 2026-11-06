@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>GoPay</title>
+
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+
+/* =====================================================
+   HTML / BODY
+===================================================== */
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+
+body{
+
+    width:100%;
+    height:100vh;
+    height:100dvh;
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 5% -5%,
+            rgba(38,155,225,.32),
+            transparent 31%
+        ),
+
+        radial-gradient(
+            circle at 105% 15%,
+            rgba(31,130,205,.22),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(17,96,160,.16),
+            transparent 48%
+        ),
+
+        radial-gradient(
+            circle at 85% 110%,
+            rgba(0,44,92,.48),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            145deg,
+            #071e36 0%,
+            #06192f 25%,
+            #051629 50%,
+            #041222 75%,
+            #020b17 100%
+        );
+
+    opacity:0;
+
+    transition:
+        opacity .7s ease;
+
+}
+
+
+/* =====================================================
+   PREMIUM OVERLAY
+===================================================== */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        linear-gradient(
+            115deg,
+            rgba(255,255,255,.085),
+            transparent 18%,
+            transparent 58%,
+            rgba(53,164,225,.035)
+        );
+
+    pointer-events:none;
+
+    z-index:1;
+
+}
+
+
+/* =====================================================
+   TOP RIGHT GLOW
+===================================================== */
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:520px;
+    height:520px;
+
+    top:-290px;
+    right:-210px;
+
+    border-radius:50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(68,174,231,.20),
+            rgba(24,111,181,.07) 42%,
+            transparent 72%
+        );
+
+    filter:blur(30px);
+
+    pointer-events:none;
+
+    z-index:1;
+
+}
+
+
+/* =====================================================
+   LOGO WRAPPER
+===================================================== */
+
+.logo-wrap{
+
+    position:absolute;
+
+    top:42%;
+    left:50%;
+
+    width:270px;
+    height:270px;
+
+    transform:
+        translate(-50%,-50%);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:5;
+
+}
+
+
+/* =====================================================
+   LARGE AMBIENT GLOW
+===================================================== */
+
+.logo-wrap::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:270px;
+    height:270px;
+
+    border-radius:50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(45,165,232,.28) 0%,
+            rgba(25,124,197,.15) 32%,
+            rgba(9,71,125,.07) 50%,
+            transparent 73%
+        );
+
+    filter:blur(30px);
+
+    opacity:0;
+
+    transform:
+        scale(.45);
+
+    animation:
+
+        ambientGlow
+        2s
+        cubic-bezier(.16,.9,.25,1)
+        .1s
+        forwards;
+
+}
+
+
+/* =====================================================
+   OUTER PREMIUM RING
+===================================================== */
+
+.logo-wrap::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:178px;
+    height:178px;
+
+    border-radius:50%;
+
+    border:
+
+        1px solid
+        rgba(255,255,255,.12);
+
+    box-shadow:
+
+        0 0 40px
+        rgba(42,159,222,.13),
+
+        0 0 80px
+        rgba(20,112,185,.08),
+
+        inset 0 0 35px
+        rgba(255,255,255,.025);
+
+    opacity:0;
+
+    transform:
+        scale(.45);
+
+    animation:
+
+        ringReveal
+        1.5s
+        cubic-bezier(.16,.9,.25,1)
+        .15s
+        forwards;
+
+}
+
+
+/* =====================================================
+   GOPAY LOGO
+===================================================== */
+
+.logo-icon{
+
+    position:relative;
+
+    width:175px;
+    height:175px;
+
+    object-fit:contain;
+
+    opacity:0;
+
+    z-index:5;
+
+    filter:
+
+        brightness(0)
+        invert(1)
+
+        drop-shadow(
+            0 20px 40px
+            rgba(0,0,0,.48)
+        )
+
+        drop-shadow(
+            0 0 28px
+            rgba(255,255,255,.18)
+        );
+
+    animation:
+
+        logoReveal
+        1.45s
+        cubic-bezier(.16,1,.3,1)
+        forwards,
+
+        logoFloat
+        4.5s
+        ease-in-out
+        1.55s
+        infinite;
+
+}
+
+
+/* =====================================================
+   LOGO REVEAL
+===================================================== */
+
+@keyframes logoReveal{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+
+            translateY(45px)
+            scale(.48)
+            rotate(-16deg);
+
+        filter:
+
+            brightness(0)
+            invert(1)
+            blur(13px)
+
+            drop-shadow(
+                0 0 0
+                rgba(255,255,255,0)
+            );
+
+    }
+
+
+    30%{
+
+        opacity:1;
+
+        transform:
+
+            translateY(-13px)
+            scale(1.12)
+            rotate(5deg);
+
+        filter:
+
+            brightness(0)
+            invert(1)
+            blur(0)
+
+            drop-shadow(
+                0 20px 40px
+                rgba(0,0,0,.42)
+            )
+
+            drop-shadow(
+                0 0 32px
+                rgba(255,255,255,.28)
+            );
+
+    }
+
+
+    52%{
+
+        transform:
+
+            translateY(4px)
+            scale(.96)
+            rotate(-2deg);
+
+    }
+
+
+    70%{
+
+        transform:
+
+            translateY(-3px)
+            scale(1.035)
+            rotate(1deg);
+
+    }
+
+
+    84%{
+
+        transform:
+
+            translateY(1px)
+            scale(.992)
+            rotate(0deg);
+
+    }
+
+
+    100%{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0)
+            scale(1)
+            rotate(0deg);
+
+        filter:
+
+            brightness(0)
+            invert(1)
+
+            drop-shadow(
+                0 20px 40px
+                rgba(0,0,0,.48)
+            )
+
+            drop-shadow(
+                0 0 28px
+                rgba(255,255,255,.18)
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   AMBIENT GLOW ANIMATION
+===================================================== */
+
+@keyframes ambientGlow{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            scale(.45);
+
+    }
+
+
+    40%{
+
+        opacity:1;
+
+        transform:
+            scale(1.16);
+
+    }
+
+
+    70%{
+
+        opacity:.72;
+
+        transform:
+            scale(1.03);
+
+    }
+
+
+    100%{
+
+        opacity:.62;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   RING ANIMATION
+===================================================== */
+
+@keyframes ringReveal{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            scale(.45);
+
+    }
+
+
+    42%{
+
+        opacity:.65;
+
+        transform:
+            scale(1.16);
+
+    }
+
+
+    70%{
+
+        opacity:.32;
+
+        transform:
+            scale(1.04);
+
+    }
+
+
+    100%{
+
+        opacity:.18;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGO FLOAT
+===================================================== */
+
+@keyframes logoFloat{
+
+    0%{
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+
+    50%{
+
+        transform:
+            translateY(-6px)
+            scale(1.012);
+
+    }
+
+
+    100%{
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGO SHINE
+===================================================== */
+
+.logo-shine{
+
+    position:absolute;
+
+    width:55px;
+    height:230px;
+
+    top:50%;
+    left:-90px;
+
+    transform:
+
+        translateY(-50%)
+        rotate(22deg);
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.38),
+            transparent
+        );
+
+    filter:blur(9px);
+
+    opacity:0;
+
+    z-index:10;
+
+    pointer-events:none;
+
+    animation:
+
+        shineMove
+        1.2s
+        ease
+        1.45s
+        forwards;
+
+}
+
+
+/* =====================================================
+   SHINE ANIMATION
+===================================================== */
+
+@keyframes shineMove{
+
+    0%{
+
+        left:-100px;
+
+        opacity:0;
+
+    }
+
+
+    15%{
+
+        opacity:.8;
+
+    }
+
+
+    75%{
+
+        opacity:.35;
+
+    }
+
+
+    100%{
+
+        left:360px;
+
+        opacity:0;
+
+    }
+
+}
+
+
+/* =====================================================
+   BOTTOM AREA
+===================================================== */
+
+.bottom{
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:82px;
+
+    transform:
+        translateX(-50%);
+
+    width:100%;
+
+    max-width:440px;
+
+    padding:
+        0 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    z-index:8;
+
+}
+
+
+/* =====================================================
+   BOTTOM GLASS
+===================================================== */
+
+.bottom-item{
+
+    min-height:44px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:
+        7px 11px;
+
+    border-radius:15px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.105),
+            rgba(255,255,255,.035)
+        );
+
+    backdrop-filter:
+
+        blur(20px)
+        saturate(160%);
+
+    -webkit-backdrop-filter:
+
+        blur(20px)
+        saturate(160%);
+
+    border:
+
+        1px solid
+        rgba(255,255,255,.13);
+
+    box-shadow:
+
+        0 15px 35px
+        rgba(0,0,0,.38),
+
+        inset 0 1px 0
+        rgba(255,255,255,.18),
+
+        inset 0 -1px 0
+        rgba(0,60,110,.20);
+
+    opacity:0;
+
+    animation:
+
+        bottomRise
+        .75s
+        cubic-bezier(.16,.9,.25,1)
+        .75s
+        forwards;
+
+}
+
+
+/* =====================================================
+   BOTTOM LOGOS
+===================================================== */
+
+.bottom-item img{
+
+    width:29px;
+    height:29px;
+
+    object-fit:contain;
+
+    flex-shrink:0;
+
+    filter:
+
+        drop-shadow(
+            0 4px 10px
+            rgba(0,0,0,.32)
+        );
+
+}
+
+
+/* =====================================================
+   DIVIDER
+===================================================== */
+
+.bottom-divider{
+
+    width:1px;
+    height:25px;
+
+    background:
+        rgba(255,255,255,.20);
+
+    opacity:0;
+
+    animation:
+
+        bottomRise
+        .75s
+        cubic-bezier(.16,.9,.25,1)
+        .75s
+        forwards;
+
+}
+
+
+/* =====================================================
+   BOTTOM TEXT
+===================================================== */
+
+.bottom-text{
+
+    max-width:185px;
+
+    color:
+        rgba(255,255,255,.88);
+
+    font-size:9.5px;
+
+    font-weight:700;
+
+    line-height:1.35;
+
+    letter-spacing:.08px;
+
+    text-align:left;
+
+    text-shadow:
+
+        0 2px 8px
+        rgba(0,0,0,.45);
+
+    opacity:0;
+
+    animation:
+
+        bottomRise
+        .75s
+        cubic-bezier(.16,.9,.25,1)
+        .75s
+        forwards;
+
+}
+
+
+/* =====================================================
+   BOTTOM REVEAL
+===================================================== */
+
+@keyframes bottomRise{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+
+            translateY(20px)
+            scale(.92);
+
+        filter:
+            blur(6px);
+
+    }
+
+
+    100%{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0)
+            scale(1);
+
+        filter:
+            blur(0);
+
+    }
+
+}
+
+
+/* =====================================================
+   LIGHT PARTICLES
+===================================================== */
+
+.light-dot{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:
+        rgba(180,230,255,.78);
+
+    box-shadow:
+
+        0 0 16px
+        rgba(52,164,225,.70);
+
+    pointer-events:none;
+
+    z-index:3;
+
+}
+
+
+.dot-one{
+
+    width:4px;
+    height:4px;
+
+    top:21%;
+    left:14%;
+
+    animation:
+
+        particleFloat
+        4s
+        ease-in-out
+        infinite;
+
+}
+
+
+.dot-two{
+
+    width:3px;
+    height:3px;
+
+    top:69%;
+    right:14%;
+
+    animation:
+
+        particleFloat
+        5s
+        ease-in-out
+        1s
+        infinite;
+
+}
+
+
+.dot-three{
+
+    width:3px;
+    height:3px;
+
+    top:31%;
+    right:23%;
+
+    animation:
+
+        particleFloat
+        4.5s
+        ease-in-out
+        .5s
+        infinite;
+
+}
+
+
+.dot-four{
+
+    width:2px;
+    height:2px;
+
+    top:47%;
+    left:10%;
+
+    animation:
+
+        particleFloat
+        5.5s
+        ease-in-out
+        1.5s
+        infinite;
+
+}
+
+
+/* =====================================================
+   PARTICLE FLOAT
+===================================================== */
+
+@keyframes particleFloat{
+
+    0%,
+    100%{
+
+        opacity:.12;
+
+        transform:
+
+            translateY(0)
+            scale(.75);
+
+    }
+
+
+    50%{
+
+        opacity:.70;
+
+        transform:
+
+            translateY(-10px)
+            scale(1.25);
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:390px){
+
+    .logo-wrap{
+
+        top:41%;
+
+        width:245px;
+        height:245px;
+
+    }
+
+
+    .logo-wrap::before{
+
+        width:245px;
+        height:245px;
+
+    }
+
+
+    .logo-wrap::after{
+
+        width:160px;
+        height:160px;
+
+    }
+
+
+    .logo-icon{
+
+        width:160px;
+        height:160px;
+
+    }
+
+
+    .bottom{
+
+        bottom:74px;
+
+        padding:
+            0 14px;
+
+        gap:7px;
+
+    }
+
+
+    .bottom-item{
+
+        min-height:41px;
+
+        padding:
+            7px 9px;
+
+        border-radius:14px;
+
+    }
+
+
+    .bottom-item img{
+
+        width:26px;
+        height:26px;
+
+    }
+
+
+    .bottom-text{
+
+        max-width:170px;
+
+        font-size:8.5px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media(max-width:350px){
+
+    .logo-wrap{
+
+        top:40%;
+
+        width:215px;
+        height:215px;
+
+    }
+
+
+    .logo-wrap::before{
+
+        width:215px;
+        height:215px;
+
+    }
+
+
+    .logo-wrap::after{
+
+        width:140px;
+        height:140px;
+
+    }
+
+
+    .logo-icon{
+
+        width:140px;
+        height:140px;
+
+    }
+
+
+    .bottom{
+
+        bottom:62px;
+
+        padding:
+            0 10px;
+
+        gap:5px;
+
+    }
+
+
+    .bottom-item{
+
+        padding:
+            6px 8px;
+
+    }
+
+
+    .bottom-item img{
+
+        width:24px;
+        height:24px;
+
+    }
+
+
+    .bottom-text{
+
+        max-width:150px;
+
+        font-size:8px;
+
+    }
+
+}
+
+
+/* =====================================================
+   EXTRA SMALL
+===================================================== */
+
+@media(max-width:320px){
+
+    .logo-wrap{
+
+        top:39%;
+
+        width:190px;
+        height:190px;
+
+    }
+
+
+    .logo-wrap::before{
+
+        width:190px;
+        height:190px;
+
+    }
+
+
+    .logo-wrap::after{
+
+        width:125px;
+        height:125px;
+
+    }
+
+
+    .logo-icon{
+
+        width:125px;
+        height:125px;
+
+    }
+
+
+    .bottom{
+
+        bottom:50px;
+
+        padding:
+            0 8px;
+
+        gap:4px;
+
+    }
+
+
+    .bottom-item{
+
+        min-height:38px;
+
+        padding:
+            5px 7px;
+
+        border-radius:12px;
+
+    }
+
+
+    .bottom-item img{
+
+        width:22px;
+        height:22px;
+
+    }
+
+
+    .bottom-text{
+
+        max-width:135px;
+
+        font-size:7.5px;
+
+    }
+
+
+    .bottom-divider{
+
+        height:22px;
+
+    }
+
+}
+
+
+/* =====================================================
+   REDUCE MOTION
+===================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:.01ms !important;
+
+        animation-iteration-count:1 !important;
+
+        transition-duration:.01ms !important;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     PARTICLES
+===================================================== -->
+
+<div class="light-dot dot-one"></div>
+
+<div class="light-dot dot-two"></div>
+
+<div class="light-dot dot-three"></div>
+
+<div class="light-dot dot-four"></div>
+
+
+<!-- =====================================================
+     LOGO
+===================================================== -->
+
+<div class="logo-wrap">
+
+    <img
+        src="assets/gopay-iconn.png"
+        class="logo-icon"
+        alt="GoPay"
+    >
+
+    <div class="logo-shine"></div>
+
+</div>
+
+
+<!-- =====================================================
+     BOTTOM INFORMATION
+===================================================== -->
+
+<div class="bottom">
+
+
+    <!-- BANK INDONESIA -->
+
+    <div class="bottom-item">
+
+        <img
+            src="assets/bi.png"
+            alt="Bank Indonesia"
+        >
+
+    </div>
+
+
+    <!-- OJK -->
+
+    <div class="bottom-item">
+
+        <img
+            src="assets/ojx.png"
+            alt="OJK"
+        >
+
+    </div>
+
+
+    <!-- DIVIDER -->
+
+    <div class="bottom-divider"></div>
+
+
+    <!-- INFORMATION -->
+
+    <div class="bottom-text">
+
+        GoPay terdaftar serta
+        diawasi oleh Bank Indonesia
+        dan OJK.
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SPLASH SCREEN
+===================================================== */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        const body =
+            document.body;
+
+
+        if(!body){
+
+            return;
+
+        }
+
+
+        /* =============================================
+           FADE IN
+        ============================================= */
+
+        requestAnimationFrame(
+            () => {
+
+                body.style.opacity =
+                    "1";
+
+            }
+        );
+
+
+        /* =============================================
+           DISPLAY TIME
+        ============================================= */
+
+        setTimeout(
+            () => {
+
+
+                /* =====================================
+                   FADE OUT
+                ===================================== */
+
+                body.style.opacity =
+                    "0";
+
+
+                /* =====================================
+                   REDIRECT
+                ===================================== */
+
+                setTimeout(
+                    () => {
+
+                        window.location.href =
+                            "form.html";
+
+                    },
+                    650
+                );
+
+
+            },
+            3500
+        );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
