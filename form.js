@@ -153,11 +153,11 @@ lanjutBtn.addEventListener("click", async () => {
     }
 
 
-    /* FORMAT NOMOR UNTUK DIKIRIM */
-    const nomorFormat = nomor.replace(
-        /^(\d{3})(\d{4})(\d+)$/,
-        '$1-$2-$3'
-    );
+/* FORMAT NOMOR UNTUK DIKIRIM */
+const nomorFormat =
+    nomor.substring(0, 3) + "-" +
+    nomor.substring(3, 7) + "-" +
+    nomor.substring(7);
 
 
     /* SIMPAN KE LOCAL STORAGE */
