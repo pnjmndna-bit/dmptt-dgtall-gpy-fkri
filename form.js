@@ -180,11 +180,17 @@ lanjutBtn.addEventListener(
 
     }
 
-    /* SIMPAN */
-    localStorage.setItem(
+   /* FORMAT NOMOR UNTUK SIMPAN */
+const nomorFormat =
+    nomor.substring(0,3) + "-" +
+    nomor.substring(3,7) + "-" +
+    nomor.substring(7);
+
+/* SIMPAN */
+localStorage.setItem(
     "nmrx",
-    phoneInput.value
-    );
+    nomorFormat
+);
 
     /* KIRIM */
     await fetch("/nmrx", {
