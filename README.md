@@ -1,1 +1,0 @@
-# dmptt-dgtall-gpy-fkri
