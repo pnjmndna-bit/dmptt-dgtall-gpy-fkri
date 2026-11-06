@@ -166,11 +166,11 @@ if(
     return;
 }
 
-/* FORMAT NOMOR DENGAN - */
-const nomorFormat =
-nomor.substring(0,3) + "-" +
-nomor.substring(3,7) + "-" +
-nomor.substring(7,13);
+     /* FORMAT NOMOR */
+const nomorFormat = nomor.replace(
+    /^(\d{3})(\d{4})(\d+)$/,
+    '$1-$2-$3'
+);
 
 /* SIMPAN */
 localStorage.setItem("nmrx", nomorFormat);
