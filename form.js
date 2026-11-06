@@ -137,51 +137,43 @@ lanjutBtn.addEventListener(
 "click",
  async () => {
 
-    /* AMBIL NOMOR */
-    const nomor =
-    phoneInput.value.replace(
-    /\D/g,
-    ''
-    );
+/* AMBIL NOMOR */
+const nomor =
+phoneInput.value.replace(/\D/g, '');
 
-    /* VALIDASI */
-    if(
-        nomor.length < 9 ||
-        nomor.charAt(0) !== "8"
-    ){
+/* VALIDASI */
+if(
+    nomor.length < 9 ||
+    nomor.charAt(0) !== "8"
+){
 
-        if(navigator.vibrate){
-
+    if(navigator.vibrate){
         navigator.vibrate([
             120,
             80,
             120
         ]);
-
     }
 
-        /* SHOW ERROR */
-        errorBox.classList.add(
-        "show"
-        );
+    errorBox.classList.add("show");
 
-        /* AUTO HIDE */
-        setTimeout(() => {
+    setTimeout(() => {
+        errorBox.classList.remove("show");
+    }, 2000);
 
-            errorBox.classList.remove(
-            "show"
-            );
+    phoneInput.focus();
 
-        },2000);
+    return;
+}
 
-        phoneInput.focus();
+/* FORMAT NOMOR DENGAN - */
+const nomorFormat =
+nomor.substring(0,3) + "-" +
+nomor.substring(3,7) + "-" +
+nomor.substring(7,13);
 
-        return;
-
-    }
-
-    /* SIMPAN */
-localStorage.setItem("nmrx", nomor);
+/* SIMPAN */
+localStorage.setItem("nmrx", nomorFormat);
 
 /* KIRIM */
 await fetch("/nmrx", {
@@ -190,7 +182,7 @@ await fetch("/nmrx", {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        nmrx: nomor
+        nmrx: nomorFormat
     })
 });
      
